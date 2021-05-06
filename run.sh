@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cd build; ./PracticeProject
+cd build/bin/1_shaders/; ./0_first_shader

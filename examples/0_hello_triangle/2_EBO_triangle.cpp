@@ -1,6 +1,6 @@
 #include <iostream>
 #include <glad/glad.h>
-#include "../external/glad/include/glad/glad.h"
+#include "../../external/glad/include/glad/glad.h"
 #include <GLFW/glfw3.h>
 
 void compileShaderWithError(GLuint shader)
@@ -44,6 +44,30 @@ void processInput(GLFWwindow *window)
         glfwSetWindowShouldClose(window, true);
 }
 
+bool hold = false;
+bool wireframe = false;
+void toggleWireframe(GLFWwindow *window)
+{
+    /* Wireframe Mode */
+    if (hold && glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE)
+    {
+        hold = false;
+    }
+    if (!hold && glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        if (wireframe)
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+        else
+        {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+        wireframe = !wireframe;
+        hold = true;
+    }
+}
+
 int main()
 {
     glfwInit();
@@ -85,9 +109,16 @@ int main()
                                        "}\0";
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f};
+        0.5f, 0.5f, 0.0f,   // top right
+        0.5f, -0.5f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, // bottom left
+        -0.5f, 0.5f, 0.0f   // top left
+    };
+    unsigned int indices[] = {
+        // note that we start from 0!
+        0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
+    };
 
     /* Compile Shaders */
     std::cout << "Compiling Shaders" << std::endl;
@@ -104,33 +135,35 @@ int main()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
     std::cout << "Success Compiling" << std::endl;
-
-    /* Create VAO with VBO */
-    std::cout << "Creating VAO" << std::endl;
-    unsigned int VBO, VAO;
-    glGenBuffers(1, &VBO);
+    unsigned int VAO, VBO, EBO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
+    /* Create VBO */
+    glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VAO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    /* Create EBO */
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    /* Set Vertex Attributes */
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
     std::cout << "Success Creating" << std::endl;
 
-    /* Use Shader */
-    std::cout << "Binding Shader and VAO" << std::endl;
-    glUseProgram(shaderProgram);
-    glBindVertexArray(VAO);
-
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);
+        toggleWireframe(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         //Draw Holy Triangle
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
