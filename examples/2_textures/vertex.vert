@@ -9,10 +9,12 @@ out vec4 absolutePosition;
 out vec3 Color;
 out vec2 TexCoord;
 
+uniform float timeVert;
 uniform vec2 positionOffset;
 void main()
 {
-    gl_Position=vec4(aPos.x+positionOffset.x,aPos.y+positionOffset.y,0.f,1.f);
+    float timeVert=timeVert/50+1;
+    gl_Position=vec4(aPos.x*timeVert+positionOffset.x,aPos.y*timeVert+positionOffset.y,0.f,1.f);
     relativePosition = vec4(aPos.xy,0.0f,0.0f);
     absolutePosition = gl_Position;
     Color = aColor; 

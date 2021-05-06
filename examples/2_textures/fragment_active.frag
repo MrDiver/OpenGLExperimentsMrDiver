@@ -24,4 +24,10 @@ void main(){
     vec2 specialCoords = vec2(TexCoord.x*cos(time*10),TexCoord.y+sin(time*1000)/10);
     vec4 kappaCray = texture(texture3,-1*specialCoords*3).xxxx; 
     color = mix(boxAwesome,kappaCray,(cos(absolutePosition*10)+1)/2);
+    
+    //Part 2
+    vec2 swingAroundCoord = vec2(sin(time*time)/100,cos(time*time)/50)+TexCoord;
+    vec4 normalKappa = texture(texture3,-1*swingAroundCoord-0.1).xxxw;
+    vec4 normalAwesome = texture(texture2,-1*TexCoord);
+    //color = mix(normalAwesome,normalKappa,-time/10);
 }

@@ -199,6 +199,7 @@ int main()
         sprog1.setUniform1i("texture2",1);
         sprog1.setUniform1i("texture3",2);
         sprog1.setUniform1f("time",time);
+        sprog1.setUniform1f("timeVert",time);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
