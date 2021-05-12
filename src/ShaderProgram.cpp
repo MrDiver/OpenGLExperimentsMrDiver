@@ -45,10 +45,9 @@ void ShaderProgram::linkShaderProgramWithError(const GLuint program)
     }
 }
 
-
 // int
 void ShaderProgram::setUniform1i(const std::string &name, GLint v)
-{          
+{
     GLuint location = glGetUniformLocation(this->id, name.c_str());
     glUniform1i(location, v);
 }
@@ -73,6 +72,7 @@ void ShaderProgram::setUniform1ui(const std::string &name, GLuint v)
     GLuint location = glGetUniformLocation(this->id, name.c_str());
     glUniform1ui(location, v);
 }
+
 void ShaderProgram::setUniform2ui(const std::string &name, GLuint v0, GLuint v1)
 {
     GLuint location = glGetUniformLocation(this->id, name.c_str());
@@ -99,14 +99,13 @@ void ShaderProgram::setUniform2f(const std::string &name, GLfloat v0, GLfloat v1
     GLuint location = glGetUniformLocation(this->id, name.c_str());
     glUniform2f(location, v0, v1);
 }
-void ShaderProgram::setUniform3f(const std::string &name, GLfloat v0, GLfloat v1, GLfloat  v2)
+void ShaderProgram::setUniform3f(const std::string &name, GLfloat v0, GLfloat v1, GLfloat v2)
 {
     GLuint location = glGetUniformLocation(this->id, name.c_str());
     glUniform3f(location, v0, v1, v2);
 }
-void ShaderProgram::setUniform4f(const std::string &name, GLfloat v0, GLfloat v1, GLfloat  v2, GLfloat v3)
+void ShaderProgram::setUniform4f(const std::string &name, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
 {
     GLuint location = glGetUniformLocation(this->id, name.c_str());
     glUniform4f(location, v0, v1, v2, v3);
 }
-

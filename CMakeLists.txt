@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.13.4)
 project(MainProject)
+set (CMAKE_CXX_STANDARD 20)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -34,9 +35,12 @@ endfunction(set_target_dir TARGET SUBDIR)
 add_subdirectory(examples/0_hello_triangle/)
 add_subdirectory(examples/1_shaders/)
 add_subdirectory(examples/2_textures/)
+add_subdirectory(examples/3_transformations/)
 
 subdirs(
     external/glfw
     external/glad
+    external/glm
+    src/
 )
 
