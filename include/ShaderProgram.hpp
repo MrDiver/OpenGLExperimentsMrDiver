@@ -1,5 +1,7 @@
 #pragma once
-#include "Shader.hpp"
+#include<vector>
+#include<glm/matrix.hpp>
+class Shader;
 
 class ShaderProgram
 {
@@ -27,8 +29,12 @@ public:
     void setUniform2f(const std::string &name, GLfloat v0, GLfloat v1);
     void setUniform3f(const std::string &name, GLfloat v0, GLfloat v1, GLfloat  v2);
     void setUniform4f(const std::string &name, GLfloat v0, GLfloat v1, GLfloat  v2, GLfloat v3);
+    // Vectors / Matrices
+    // Floats
+    void setUniformMatrix(const std::string &name, glm::mat4 v, bool transpose = GL_FALSE);
 
     //Constructor Destructor
     ShaderProgram();
+    ShaderProgram(const std::vector<Shader> &s);
     ~ShaderProgram();
 };

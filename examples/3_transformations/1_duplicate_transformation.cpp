@@ -64,10 +64,6 @@ int main()
 
 
 
-
-    glm::mat4 trans = glm::mat4(1.0f);
-    trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-    trans = glm::translate(trans, glm::vec3(0.7f,-0.7f,0));
     float start = glfwGetTime();
     while (!w.shouldClose())
     {
@@ -81,34 +77,31 @@ int main()
         containerTexture.bindTo(0);
         awesomeTexture.bindTo(1);
         kappaTexture.bindTo(2);
-
-        /*
-            First Test
-         */
-        float passedTime = glfwGetTime() - start;
-        start += passedTime;
-        trans = glm::rotate(trans, glm::radians(passedTime*-100), glm::vec3(0.0f, 0.0f, 1.0f));
-
         vao1.bind();
         sprog1.use();
         sprog1.setUniform1i("box",0);
         sprog1.setUniform1i("awesome",1);
         sprog1.setUniform1i("kappa",2);
-        sprog1.setUniformMatrix("transform", trans);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        /*
-         Second Test
-         */
-        float currentTime = glfwGetTime();
-        glm::mat4 trans2 = glm::mat4(1.0f);
-        trans2 = glm::rotate(trans2, glm::radians((float)(currentTime*-100)), glm::vec3(0.0f, 0.0f, 1.0f));
-        trans2 = glm::translate(trans2, glm::vec3(-0.5f,0.5f,0));
-        trans2 = glm::scale(trans2, glm::vec3(sin(currentTime)/2, sin(currentTime)/2, 1.0f));
-        trans2 = glm::rotate(trans2, glm::radians((float)(currentTime*300)), glm::vec3(0.0f, 0.0f, 1.0f));
-        sprog1.setUniformMatrix("transform", trans2);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+        int x = 10;
+        int y = 10;
+        for(int i = 0; i < x; i++)
+        {
+            for(int j = 0; j < y; j++){
+                float currentTime = glfwGetTime();
+                glm::mat4 trans2 = glm::mat4(1.0f);
+                trans2 = glm::translate(trans2, glm::vec3((x/2-i)/(float)(x/2+1),(y/2-j)/(float)(y/2+1),0));
+                float fac = (sin(currentTime*5+i)+1)/50.0f;
+                float fac2 = (sin(currentTime*5+j)+1)/50.0f;
+                trans2 = glm::scale(trans2, glm::vec3(0.05f+fac+fac2,0.05f+fac+fac2,1.0f));
+                trans2 = glm::rotate(trans2, glm::radians((currentTime+i+j*x)*100), glm::vec3(0.0f,0.0f,1.0f));
+                trans2 = glm::translate(trans2, glm::vec3(0.5f+fac,0.5f+fac2,0.0f));
+                trans2 = glm::rotate(trans2, glm::radians((currentTime*10+i*y+j)*100), glm::vec3(0.0f,0.0f,1.0f));
+                sprog1.setUniformMatrix("transform", trans2);
+                glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            }
+        }
         glBindVertexArray(0);
         glfwSwapBuffers(window);
         glfwPollEvents();

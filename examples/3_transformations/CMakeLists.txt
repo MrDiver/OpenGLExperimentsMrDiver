@@ -3,6 +3,7 @@ project(3_transformations)
 
 set(APP_SOURCES 
     0_first_transformation.cpp
+    1_duplicate_transformation.cpp
 )
 
 set(SHADER

@@ -10,6 +10,30 @@ VertexBuffer::VertexBuffer(const uint8_t num)
     glGenBuffers(num, this->ids);
 }
 
+VertexBuffer::VertexBuffer(const std::vector<float> v, const GLenum usage)
+:num(1)
+{
+    this->ids = new GLuint[num];
+    glGenBuffers(num, this->ids);
+    //Bind Data
+    this->bind(0);
+    this->bindData(v, usage);
+}
+
+VertexBuffer::VertexBuffer(const std::vector<std::vector<float>> v, const GLenum usage)
+:num(v.size())
+{
+    if(num < 1) throw std::runtime_error("VertexBuffer::ERROR::Constructor: Length of the given Vector is smaller than 1");
+    this->ids = new GLuint[num];
+    glGenBuffers(num, this->ids);
+    //Bind Data
+    uint8_t buffer = 0;
+    for(auto i=v.begin(); i!=v.end();++i){
+        this->bind(buffer);
+        this->bindData(*i, usage);
+    }
+}
+
 VertexBuffer::~VertexBuffer()
 {
     delete[] this->ids;

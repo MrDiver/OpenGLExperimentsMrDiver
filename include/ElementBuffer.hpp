@@ -12,6 +12,8 @@ private:
 
 public:
     ElementBuffer(const uint8_t num = 1);
+    ElementBuffer(const std::vector<int> v, const GLenum usage = GL_STATIC_DRAW);
+    ElementBuffer(const std::vector<std::vector<int>> v, const GLenum usage = GL_STATIC_DRAW);
     ~ElementBuffer();
     void bind(const uint8_t idx = 0) const;
     void bindData(const std::vector<int> &data, const GLenum usage = GL_STATIC_DRAW) const; //  GL_STATIC_DRAW,  GL_DYNAMIC_DRAW

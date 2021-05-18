@@ -3,7 +3,7 @@
 #include <iostream>
 
 Shader::Shader(std::string filepath, GLuint shadertype)
-    : id(glCreateShader(shadertype))
+    : _usable(true),_id(glCreateShader(shadertype))
 {
     this->type = shadertype;
     this->filepath = filepath;
@@ -19,13 +19,13 @@ Shader::Shader(std::string filepath, GLuint shadertype)
                         (std::istreambuf_iterator<char>()));
     ifs.close();
     const char *charstring = content.c_str();
-    glShaderSource(this->id, 1, &charstring, NULL);
-    compileShaderWithError(this->id);
+    glShaderSource(this->_id, 1, &charstring, NULL);
+    compileShaderWithError(this->_id);
 }
 
 Shader::~Shader()
 {
-    glDeleteShader(this->id);
+    if(this->usable()) glDeleteShader(this->_id);
 }
 
 std::string Shader::getTypeString()
@@ -68,4 +68,17 @@ void Shader::compileShaderWithError(GLuint shader)
     std::cout << "SUCCESS::SHADER::" << getTypeString() << "::COMPILATION "
               << this->filepath << std::endl;
 #endif
+}
+
+void Shader::del(){
+    this->_usable = false;
+    glDeleteShader(this->_id);
+}
+
+bool Shader::usable() const{
+    return this->_usable;
+}
+
+const GLuint Shader::id() const{
+    return this->_id;
 }

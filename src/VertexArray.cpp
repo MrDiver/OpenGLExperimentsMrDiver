@@ -16,7 +16,7 @@ VertexArray::~VertexArray()
 void VertexArray::bind(const uint8_t idx) const
 {
     if (idx < 0 || idx >= this->num) throw std::runtime_error("VertexArray::ERROR::bind: Index out of range");
-    glBindBuffer(GL_ARRAY_BUFFER, this->ids[idx]);
+    glBindVertexArray(this->ids[idx]);
 }
 
 void VertexArray::set(const uint8_t pointer, GLuint64 size, GLuint64 shift, GLuint64 start) const
