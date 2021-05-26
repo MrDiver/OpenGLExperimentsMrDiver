@@ -4,10 +4,12 @@ project(3_transformations)
 set(APP_SOURCES 
     0_first_transformation.cpp
     1_duplicate_transformation.cpp
+    2_spaces_transformation.cpp
 )
 
 set(SHADER
     vertex.vert
+    perspective_shader.vert
     fragment.frag
 )
 
