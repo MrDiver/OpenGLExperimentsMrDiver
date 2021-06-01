@@ -168,8 +168,8 @@ int main()
 
         // Camera
         float radius = 10.0f;
-        //cam.moveLocal(glm::vec3(1.0f,0.0f,0.0f)*deltaTime);
-        //cam.lookAt(glm::vec3(sin(currentTime*10),cos(currentTime*5),0.0f));
+        cam.moveLocal(glm::vec3(1.0f,0.0f,0.0f)*deltaTime);
+        cam.lookAt(glm::vec3(sin(currentTime*10),cos(currentTime*5),0.0f));
         glm::mat4 view = cam.viewOnly();
 
 
