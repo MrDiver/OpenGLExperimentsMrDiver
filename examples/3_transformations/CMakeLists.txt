@@ -5,6 +5,8 @@ set(APP_SOURCES
     0_first_transformation.cpp
     1_duplicate_transformation.cpp
     2_spaces_transformation.cpp
+    3_cube_army.cpp
+    4_camera.cpp
 )
 
 set(SHADER

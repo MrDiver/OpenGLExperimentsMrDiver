@@ -8,7 +8,6 @@
 class Window{
 private:
     GLFWwindow* window;
-    int _width, _height;
     bool wireframe = false;
     bool w_held = false;
 

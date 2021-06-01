@@ -76,6 +76,19 @@ int main()
     };
     std::vector<int> indices = {};
 
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+
     // Load Container Texture
     Texture2D containerTexture("res/container.jpg");
     std::cout << "Loaded Container w:"<<containerTexture.width()<<" h:"<<containerTexture.height()<<" c:"<<containerTexture.channels() << std::endl;
@@ -95,7 +108,6 @@ int main()
     vao1.set(1,2,shiftwidth,3);
     vao1.enable(1);
 //     glBindVertexArray(0);
-
 
 
 
@@ -125,24 +137,31 @@ int main()
         float fac = 0;
         float fac2 = 0;
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f,0.0f,0.0f));
-        model = glm::rotate(model, glm::radians(sin(currentTime)*360+currentTime), glm::vec3(0.0f,0.0f,1.0f));
-        model = glm::rotate(model, glm::radians(cos(currentTime)*260), glm::vec3(0.0f,1.0f,0.0f));
+
 
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+        view = glm::rotate(view, glm::radians(currentTime*100), glm::vec3(0.0, 1.0f, 0.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, 3.0f));
 
 
         float ratio = (float)w.width()/(float)w.height();
-        std::cout << w.width() << " " << w.height() << std::endl;
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), ratio, 0.1f, 100.0f);
 
-        sprog1.setUniformMatrix("model", model);
+
         sprog1.setUniformMatrix("view", view);
         sprog1.setUniformMatrix("projection", projection);
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for(unsigned int i = 0; i<10; i++){
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::rotate(model, glm::radians(-55.0f), cubePositions[i]);
+            model = glm::translate(model, cubePositions[i]);
+            model = glm::rotate(model, glm::radians(sin(currentTime+i*20)*360+currentTime), glm::vec3(0.0f,0.0f,1.0f));
+            model = glm::rotate(model, glm::radians(cos(currentTime+i*10)*260), glm::vec3(0.0f,1.0f,0.0f));
+            sprog1.setUniformMatrix("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+            std::cout << i << std::endl;
+        }
 //         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);

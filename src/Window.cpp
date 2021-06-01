@@ -45,12 +45,14 @@ void Window::exitOnClose()
 void Window::toggleWireframe()
 {
     /* Wireframe Mode */
-    if (this->w_held && glfwGetKey(this->window, GLFW_KEY_W) == GLFW_RELEASE)
+    if (this->w_held && glfwGetKey(this->window, GLFW_KEY_Z) == GLFW_RELEASE)
     {
         this->w_held = false;
     }
-    if (!this->w_held && glfwGetKey(this->window, GLFW_KEY_W) == GLFW_PRESS)
+    if (!this->w_held && glfwGetKey(this->window, GLFW_KEY_Z) == GLFW_PRESS)
     {
+        this->wireframe = !this->wireframe;
+        this->w_held = true;
         if (this->wireframe)
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -59,8 +61,7 @@ void Window::toggleWireframe()
         {
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
-        this->wireframe = !this->wireframe;
-        this->w_held = true;
+
     }
 }
 
@@ -74,5 +75,20 @@ bool Window::shouldClose(){
 }
 
 GLFWwindow* Window::pointer() const{
-    return this->window;
+    return this -> window;
 }
+
+int Window::width()
+{
+    int width, height;
+    glfwGetWindowSize(this->window,&width, &height);
+    return width;
+}
+
+int Window::height()
+{
+    int width, height;
+    glfwGetWindowSize(this->window,&width, &height);
+    return height;
+}
+

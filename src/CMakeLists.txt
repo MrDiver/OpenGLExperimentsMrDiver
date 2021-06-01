@@ -7,6 +7,8 @@ add_library(CGGL SHARED
     ElementBuffer.cpp
     Texture2D.cpp
     Window.cpp
+    Camera.cpp
+    Projection.cpp
 )
 
 add_library(STBIMAGE SHARED

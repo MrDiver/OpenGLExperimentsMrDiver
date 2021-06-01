@@ -11,12 +11,29 @@
 #include <ElementBuffer.hpp>
 #include <Texture2D.hpp>
 #include <Window.hpp>
+#include <Projection.hpp>
+#include <Camera.hpp>
 
 #include <vector>
 
-#include <glm/glm.hpp>
+#include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
+
+glm::vec3 cameraPositionTick(GLFWwindow *window,glm::vec3 cameraPos, glm::vec3 cameraFront, glm::vec3 cameraUp, float dt)
+{
+    const float cameraSpeed = 4.0f; // adjust accordingly
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraFront * dt;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront * dt;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * dt;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * dt;
+
+    return cameraPos;
+}
 
 int main()
 {
@@ -76,6 +93,19 @@ int main()
     };
     std::vector<int> indices = {};
 
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+
     // Load Container Texture
     Texture2D containerTexture("res/container.jpg");
     std::cout << "Loaded Container w:"<<containerTexture.width()<<" h:"<<containerTexture.height()<<" c:"<<containerTexture.channels() << std::endl;
@@ -97,7 +127,16 @@ int main()
 //     glBindVertexArray(0);
 
 
+    float deltaTime = 0.0f;	// Time between current frame and last frame
+    float lastFrame = 0.0f; // Time of last frame
 
+    // Part Camera
+    glm::vec3 cameraPos = glm::vec3(0.0f,0.0f,5.0f);
+    glm::vec3 cameraFront = glm::vec3(0.0f,0.0f,-1.0f);
+    glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+    Projection proj;
+    Camera cam(proj,cameraPos,cameraFront);
 
     float start = glfwGetTime();
     while (!w.shouldClose())
@@ -122,27 +161,34 @@ int main()
         int x = 10;
         int y = 10;
         float currentTime = glfwGetTime();
+        deltaTime = currentTime - lastFrame;
+        lastFrame = currentTime;
         float fac = 0;
         float fac2 = 0;
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f,0.0f,0.0f));
-        model = glm::rotate(model, glm::radians(sin(currentTime)*360+currentTime), glm::vec3(0.0f,0.0f,1.0f));
-        model = glm::rotate(model, glm::radians(cos(currentTime)*260), glm::vec3(0.0f,1.0f,0.0f));
-
-        glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        // Camera
+        float radius = 10.0f;
+        //cam.moveLocal(glm::vec3(1.0f,0.0f,0.0f)*deltaTime);
+        //cam.lookAt(glm::vec3(sin(currentTime*10),cos(currentTime*5),0.0f));
+        glm::mat4 view = cam.viewOnly();
 
 
         float ratio = (float)w.width()/(float)w.height();
-        std::cout << w.width() << " " << w.height() << std::endl;
         glm::mat4 projection = glm::perspective(glm::radians(45.0f), ratio, 0.1f, 100.0f);
 
-        sprog1.setUniformMatrix("model", model);
+
         sprog1.setUniformMatrix("view", view);
         sprog1.setUniformMatrix("projection", projection);
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        for(unsigned int i = 0; i<10; i++){
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::rotate(model, glm::radians(-55.0f), cubePositions[i]);
+            model = glm::translate(model, cubePositions[i]);
+            model = glm::rotate(model, glm::radians(sin(currentTime+i*20)*360+currentTime), glm::vec3(0.0f,0.0f,1.0f));
+            model = glm::rotate(model, glm::radians(cos(currentTime+i*10)*260), glm::vec3(0.0f,1.0f,0.0f));
+            sprog1.setUniformMatrix("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
 //         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
